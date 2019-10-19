@@ -10,17 +10,6 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
   
-  def same_director
-    @movie = Movie.find(params[:id]) 
-    director = @movie.director
-    if director.empty? then
-      flash[:notice] = "'#{@movie.title}' has no director info"
-      redirect_to movies_path
-    else
-      @movies = Movie.where(Director: director)
-    end
-  end
-
   def index
     sort = params[:sort] || session[:sort]
     case sort
@@ -71,5 +60,15 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
-
+  
+  def similar_movies
+    @movie = Movie.find(params[:id])
+    director_name = @movie.director
+    if director_name.nil? or director_name.empty?
+     flash[:notice] = "'#{@movie.title}' has no director info"
+      redirect_to movies_path
+          end
+    @movies = Movie.where(director: director_name)
+    #@movies = Movie.find_by(director:director_name)
+  end
 end

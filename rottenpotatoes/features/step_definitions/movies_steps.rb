@@ -23,3 +23,14 @@ Then /I should see all the movies/ do
     step %{I should see "#{movie.title}"}
   end
 end
+
+Given(/^the following movies exist:$/) do |table|
+    table.hashes.each do |hash|
+      Movie.create hash
+    end
+end
+
+Then(/^the director of "([^"]*)" should be "([^"]*)"$/) do |arg1, arg2|
+  movie = Movie.find_by(title: arg1)
+  expect(movie.director).to eql(arg2)
+end 
